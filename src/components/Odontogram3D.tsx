@@ -31,7 +31,7 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
   const sceneRef = useRef<Scene>();
   const rendererRef = useRef<WebGLRenderer>();
   const cameraRef = useRef<PerspectiveCamera>();
-  const controlsRef = useRef<any>();
+  const controlsRef = useRef<{ dispose: () => void } | null>();
   const [hoveredTooth, setHoveredTooth] = useState<ToothData | null>(null);
   const [selectedTooth, setSelectedTooth] = useState<ToothData | null>(null);
   const frameRef = useRef<number>();
@@ -41,10 +41,11 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
 
   // Initialize Three.js scene
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mountNode = mountRef.current;
+    if (!mountNode) return;
 
-    const width = mountRef.current.clientWidth;
-    const height = mountRef.current.clientHeight;
+    const width = mountNode.clientWidth;
+    const height = mountNode.clientHeight;
 
     // Scene
     const scene = new Scene();
@@ -61,7 +62,7 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
-    mountRef.current.appendChild(renderer.domElement);
+    mountNode.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Lighting
@@ -160,12 +161,11 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
       }
-      window.removeEventListener("resize", handleResize);
       if (controlsRef.current) {
         controlsRef.current.dispose();
       }
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (mountNode && renderer.domElement) {
+        mountNode.removeChild(renderer.domElement);
       }
       renderer.dispose();
     };
@@ -203,17 +203,15 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
     ));
   };
 
-  useEffect(() => {
-    renderTeeth();
-  }, []);
-
   return (
     <div className={`odontogram-container relative w-full h-full ${className}`}>
       <div
         ref={mountRef}
         className="w-full h-96 rounded-lg shadow-lg"
         style={{ minHeight: "400px" }}
-      />
+      >
+        {renderTeeth()}
+      </div>
 
       <ControlPanel
         interactive={interactive}

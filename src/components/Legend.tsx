@@ -10,7 +10,10 @@ interface LegendProps {
   };
 }
 
-const Legend: React.FC<LegendProps> = ({ theme, themeColors }) => {
+const Legend: React.FC<LegendProps> = ({
+  // theme,
+  themeColors,
+}) => {
   return (
     <div
       className="absolute bottom-4 left-4 rounded-lg p-3 shadow-md backdrop-blur-sm"

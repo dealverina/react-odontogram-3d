@@ -12,7 +12,7 @@ interface ControlPanelProps {
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   interactive,
-  theme,
+  // theme,
   themeColors,
 }) => {
   return (

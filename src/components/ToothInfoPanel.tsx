@@ -1,25 +1,29 @@
-import React from 'react';
-import { ToothData } from '../types';
+import React from "react";
+import { ToothData } from "../types";
 
 interface ToothInfoPanelProps {
   tooth: ToothData | null;
-  theme: 'light' | 'dark';
-  themeColors: any;
+  theme: "light" | "dark";
+  themeColors: {
+    panel: string;
+    text: string;
+    textSecondary: string;
+  };
 }
 
 const ToothInfoPanel: React.FC<ToothInfoPanelProps> = ({
   tooth,
-  theme,
-  themeColors
+  // theme,
+  themeColors,
 }) => {
   if (!tooth) return null;
 
   return (
-    <div 
+    <div
       className="absolute top-4 right-4 rounded-lg p-3 shadow-md max-w-xs backdrop-blur-sm"
-      style={{ 
+      style={{
         backgroundColor: themeColors.panel,
-        color: themeColors.text 
+        color: themeColors.text,
       }}
     >
       <div className="text-sm">
@@ -27,16 +31,25 @@ const ToothInfoPanel: React.FC<ToothInfoPanelProps> = ({
         <p style={{ color: themeColors.textSecondary }} className="capitalize">
           {tooth.name}
         </p>
-        <p style={{ color: themeColors.textSecondary }} className="text-xs capitalize">
+        <p
+          style={{ color: themeColors.textSecondary }}
+          className="text-xs capitalize"
+        >
           {tooth.type}
         </p>
-        
+
         {tooth.conditions.length > 0 && (
           <div className="mt-2">
-            <p className="text-xs font-medium" style={{ color: themeColors.text }}>
+            <p
+              className="text-xs font-medium"
+              style={{ color: themeColors.text }}
+            >
               Conditions:
             </p>
-            <ul className="text-xs mt-1" style={{ color: themeColors.textSecondary }}>
+            <ul
+              className="text-xs mt-1"
+              style={{ color: themeColors.textSecondary }}
+            >
               {tooth.conditions.map((condition, index) => (
                 <li key={index} className="flex items-center gap-2">
                   <span
@@ -44,7 +57,7 @@ const ToothInfoPanel: React.FC<ToothInfoPanelProps> = ({
                     style={{ backgroundColor: condition.color }}
                   />
                   <span className="capitalize">
-                    {condition.type.replace('_', ' ')}
+                    {condition.type.replace("_", " ")}
                   </span>
                   {condition.surface && (
                     <span className="text-xs opacity-75">
@@ -59,10 +72,16 @@ const ToothInfoPanel: React.FC<ToothInfoPanelProps> = ({
 
         {tooth.notes && (
           <div className="mt-2">
-            <p className="text-xs font-medium" style={{ color: themeColors.text }}>
+            <p
+              className="text-xs font-medium"
+              style={{ color: themeColors.text }}
+            >
               Notes:
             </p>
-            <p className="text-xs mt-1" style={{ color: themeColors.textSecondary }}>
+            <p
+              className="text-xs mt-1"
+              style={{ color: themeColors.textSecondary }}
+            >
               {tooth.notes}
             </p>
           </div>

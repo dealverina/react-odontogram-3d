@@ -59,8 +59,14 @@ const Tooth3D: React.FC<Tooth3DProps> = ({
         onPointerEnter={() => onHover(true)}
         onPointerLeave={() => onHover(false)}
       >
-        <primitive object={geometry} />
-        <primitive object={material} />
+        <bufferGeometry {...geometry} />
+        <meshPhongMaterial
+          {...material}
+          color={baseColor}
+          shininess={30}
+          transparent={true}
+          opacity={isHovered ? 0.8 : 1.0}
+        />
       </mesh>
     </Canvas>
   );

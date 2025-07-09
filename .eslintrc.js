@@ -27,7 +27,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/components/Tooth3D.tsx"],
+      files: ["src/components/Tooth3D.tsx", "src/components/Odontogram3D.tsx"],
       rules: {
         "react/no-unknown-property": "off", // ✅ matikan hanya untuk file ini
       },
