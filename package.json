@@ -1,6 +1,6 @@
 {
   "name": "react-odontogram-3d",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Interactive 3D dental chart component for React with TypeScript support",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
