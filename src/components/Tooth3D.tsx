@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useMemo } from "react";
-import * as THREE from "three";
+import React, { useRef, useMemo, useEffect } from "react";
+import { Mesh, MeshPhongMaterial } from "three";
+import { Canvas } from "@react-three/fiber";
 import { Tooth3DProps } from "../types";
 import { CONDITION_COLORS } from "../constants";
 import { getToothGeometry } from "../utils";
@@ -12,12 +13,20 @@ const Tooth3D: React.FC<Tooth3DProps> = ({
   isHovered,
   size,
 }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<Mesh>(null);
 
   const geometry = useMemo(
     () => getToothGeometry(tooth.type, size),
     [tooth.type, size]
   );
+
+  const baseColor = useMemo(() => {
+    if (tooth.conditions.length > 0) {
+      const primaryCondition = tooth.conditions[0];
+      return CONDITION_COLORS[primaryCondition.type] || "#ffffff";
+    }
+    return "#ffffff";
+  }, [tooth.conditions]);
 
   const material = useMemo(() => {
     let baseColor = "#ffffff";
@@ -27,7 +36,7 @@ const Tooth3D: React.FC<Tooth3DProps> = ({
       baseColor = CONDITION_COLORS[primaryCondition.type] || "#ffffff";
     }
 
-    return new THREE.MeshPhongMaterial({
+    return new MeshPhongMaterial({
       color: baseColor,
       shininess: 30,
       transparent: true,
@@ -43,14 +52,17 @@ const Tooth3D: React.FC<Tooth3DProps> = ({
   }, [position, isHovered]);
 
   return (
-    <mesh
-      ref={meshRef}
-      geometry={geometry}
-      material={material}
-      onClick={onClick}
-      onPointerEnter={() => onHover(true)}
-      onPointerLeave={() => onHover(false)}
-    />
+    <Canvas>
+      <mesh
+        ref={meshRef}
+        onClick={onClick}
+        onPointerEnter={() => onHover(true)}
+        onPointerLeave={() => onHover(false)}
+      >
+        <primitive object={geometry} />
+        <primitive object={material} />
+      </mesh>
+    </Canvas>
   );
 };
 

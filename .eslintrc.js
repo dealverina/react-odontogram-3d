@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
   ],
@@ -25,6 +25,14 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
   },
+  overrides: [
+    {
+      files: ["src/components/Tooth3D.tsx"],
+      rules: {
+        "react/no-unknown-property": "off", // ✅ matikan hanya untuk file ini
+      },
+    },
+  ],
   settings: {
     react: {
       version: "detect",

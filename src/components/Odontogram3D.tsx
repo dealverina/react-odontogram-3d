@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
-import * as THREE from "three";
 import { OdontogramProps, ToothData } from "../types";
 import { DEFAULT_TEETH, THEME_COLORS } from "../constants";
 import { getToothPosition, getSizeMultiplier } from "../utils";
+import {
+  Scene,
+  WebGLRenderer,
+  PerspectiveCamera,
+  Color,
+  PCFSoftShadowMap,
+  AmbientLight,
+  DirectionalLight,
+  Spherical,
+} from "three";
 import Tooth3D from "./Tooth3D";
 import ToothInfoPanel from "./ToothInfoPanel";
 import ControlPanel from "./ControlPanel";
@@ -12,16 +21,16 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
   teeth = DEFAULT_TEETH,
   onToothClick,
   onToothHover,
-  showLabels = true,
+  // showLabels = true,
   interactive = true,
   theme = "light",
   size = "medium",
   className = "",
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene>();
-  const rendererRef = useRef<THREE.WebGLRenderer>();
-  const cameraRef = useRef<THREE.PerspectiveCamera>();
+  const sceneRef = useRef<Scene>();
+  const rendererRef = useRef<WebGLRenderer>();
+  const cameraRef = useRef<PerspectiveCamera>();
   const controlsRef = useRef<any>();
   const [hoveredTooth, setHoveredTooth] = useState<ToothData | null>(null);
   const [selectedTooth, setSelectedTooth] = useState<ToothData | null>(null);
@@ -38,33 +47,33 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
     const height = mountRef.current.clientHeight;
 
     // Scene
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(themeColors.background);
+    const scene = new Scene();
+    scene.background = new Color(themeColors.background);
     sceneRef.current = scene;
 
     // Camera
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const camera = new PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.set(0, 0, 15);
     cameraRef.current = camera;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+    const ambientLight = new AmbientLight(0x404040, 0.4);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(10, 10, 5);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    const fillLight = new DirectionalLight(0xffffff, 0.3);
     fillLight.position.set(-10, -10, -5);
     scene.add(fillLight);
 
@@ -88,7 +97,7 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
         };
 
         // Rotate camera around scene
-        const spherical = new THREE.Spherical();
+        const spherical = new Spherical();
         spherical.setFromVector3(camera.position);
         spherical.theta -= deltaMove.x * 0.01;
         spherical.phi += deltaMove.y * 0.01;
@@ -193,6 +202,10 @@ const Odontogram3D: React.FC<OdontogramProps> = ({
       />
     ));
   };
+
+  useEffect(() => {
+    renderTeeth();
+  }, []);
 
   return (
     <div className={`odontogram-container relative w-full h-full ${className}`}>

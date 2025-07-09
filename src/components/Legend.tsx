@@ -3,7 +3,11 @@ import { CONDITION_COLORS } from "../constants";
 
 interface LegendProps {
   theme: "light" | "dark";
-  themeColors: any;
+  themeColors: {
+    panel: string;
+    text: string;
+    textSecondary: string;
+  };
 }
 
 const Legend: React.FC<LegendProps> = ({ theme, themeColors }) => {

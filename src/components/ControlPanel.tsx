@@ -3,7 +3,11 @@ import React from "react";
 interface ControlPanelProps {
   interactive: boolean;
   theme: "light" | "dark";
-  themeColors: any;
+  themeColors: {
+    panel: string;
+    text: string;
+    textSecondary: string;
+  };
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
